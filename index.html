@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AttendWise – Modern, responsive student attendance calculator to track percentage, calculate safe absences, and find required classes to reach 75%.">
+  <meta name="theme-color" content="#1d4ed8">
+  <title>AttendWise – Student Attendance Calculator</title>
+
+  <!-- Favicon using SVG Data URI -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 14.54l-7-3.82V17c0 3.31 3.13 6 7 6s7-2.69 7-6v-3.28l-7 3.82z'/></svg>" type="image/svg+xml">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Decorative Blobs -->
+  <div class="bg-shape shape-1" aria-hidden="true"></div>
+  <div class="bg-shape shape-2" aria-hidden="true"></div>
+
+  <div class="app-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-icon-box" aria-hidden="true">
+        <!-- Graduation Cap SVG Icon -->
+        <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1 class="brand-title">Attend<span class="brand-accent">Wise</span></h1>
+        <p class="brand-subtitle">Your attendance, under control.</p>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="dashboard-container">
+      <!-- Left Column: Input Card & Quick Controls -->
+      <section class="card input-card" aria-labelledby="calculator-heading">
+        <div class="card-header">
+          <div class="card-title-wrap">
+            <span class="step-badge" aria-hidden="true">1</span>
+            <h2 id="calculator-heading">Enter Attendance Data</h2>
+          </div>
+          <p class="card-desc">Enter the total number of periods or classes held so far.</p>
+        </div>
+
+        <form id="attendance-form" novalidate>
+          <!-- Classes Attended Field -->
+          <div class="form-group">
+            <label for="attended-input">
+              <span class="label-text">Number of Classes Attended</span>
+              <span class="badge badge-success">Attended</span>
+            </label>
+            <div class="input-wrapper">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 6L9 17l-5-5"></path>
+              </svg>
+              <input
+                type="number"
+                id="attended-input"
+                name="attended"
+                min="0"
+                step="1"
+                placeholder="e.g., 36"
+                required
+                aria-describedby="attended-error"
+                autocomplete="off"
+              >
+            </div>
+            <p id="attended-error" class="error-msg" role="alert" aria-live="polite"></p>
+          </div>
+
+          <!-- Classes Absent Field -->
+          <div class="form-group">
+            <label for="absent-input">
+              <span class="label-text">Number of Classes Absent</span>
+              <span class="badge badge-warning">Missed</span>
+            </label>
+            <div class="input-wrapper">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <input
+                type="number"
+                id="absent-input"
+                name="absent"
+                min="0"
+                step="1"
+                placeholder="e.g., 8"
+                required
+                aria-describedby="absent-error"
+                autocomplete="off"
+              >
+            </div>
+            <p id="absent-error" class="error-msg" role="alert" aria-live="polite"></p>
+          </div>
+
+          <!-- Global Form Error Banner -->
+          <div id="general-error" class="alert-banner alert-danger hidden" role="alert" aria-live="polite">
+            <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span id="general-error-text">Please enter valid attendance details.</span>
+          </div>
+
+          <!-- Button Controls -->
+          <div class="btn-group">
+            <button type="submit" id="calculate-btn" class="btn btn-primary">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                <line x1="8" y1="6" x2="16" y2="6"></line>
+                <line x1="16" y1="14" x2="16" y2="18"></line>
+                <line x1="8" y1="14" x2="8" y2="14.01"></line>
+                <line x1="12" y1="14" x2="12" y2="14.01"></line>
+                <line x1="8" y1="18" x2="8" y2="18.01"></line>
+                <line x1="12" y1="18" x2="12" y2="18.01"></line>
+                <line x1="8" y1="10" x2="8" y2="10.01"></line>
+                <line x1="12" y1="10" x2="12" y2="10.01"></line>
+                <line x1="16" y1="10" x2="16" y2="10.01"></line>
+              </svg>
+              <span>Calculate Attendance</span>
+            </button>
+
+            <button type="button" id="reset-btn" class="btn btn-secondary" title="Clear inputs and results">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span>Reset</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Quick Sample Testing Chips -->
+        <div class="quick-examples">
+          <span class="examples-label">Try example:</span>
+          <button type="button" class="chip-btn" data-attended="32" data-absent="8">
+            32 Attended, 8 Absent (80%)
+          </button>
+          <button type="button" class="chip-btn" data-attended="18" data-absent="10">
+            18 Attended, 10 Absent (64.3%)
+          </button>
+        </div>
+
+        <!-- 75% Benchmark Info Box -->
+        <div class="info-callout">
+          <div class="callout-icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="callout-text">
+            <strong>75% Academic Requirement</strong>
+            <p>Universities and colleges mandate at least 75% attendance to be eligible for semester examinations.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Results Dashboard -->
+      <section class="card results-card" aria-labelledby="results-heading">
+        <div class="card-header">
+          <div class="card-title-wrap">
+            <span class="step-badge" aria-hidden="true">2</span>
+            <h2 id="results-heading">Attendance Dashboard</h2>
+          </div>
+          <p class="card-desc">Comprehensive real-time calculation and recommendations.</p>
+        </div>
+
+        <!-- Empty State (Shown before calculation) -->
+        <div id="empty-state" class="empty-state">
+          <div class="empty-icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3>No attendance computed yet</h3>
+          <p>Fill in your attended and absent class counts on the left, then click <strong>Calculate Attendance</strong> to view your progress.</p>
+        </div>
+
+        <!-- Populated Results Container (Hidden initially) -->
+        <div id="results-display" class="results-display hidden" aria-live="polite">
+          <!-- Circular Progress Meter & Status Pill -->
+          <div class="meter-section">
+            <div class="circular-meter-container">
+              <svg class="circular-meter" viewBox="0 0 160 160">
+                <!-- Background track -->
+                <circle
+                  class="meter-track"
+                  cx="80"
+                  cy="80"
+                  r="68"
+                  stroke-width="14"
+                />
+                <!-- 75% target threshold tick/indicator -->
+                <circle
+                  class="meter-threshold"
+                  cx="80"
+                  cy="80"
+                  r="68"
+                  stroke-width="14"
+                  stroke-dasharray="2 425"
+                  stroke-dashoffset="-320.4"
+                  aria-hidden="true"
+                />
+                <!-- Animated fill bar -->
+                <circle
+                  id="meter-progress"
+                  class="meter-progress"
+                  cx="80"
+                  cy="80"
+                  r="68"
+                  stroke-width="14"
+                  stroke-dasharray="427.26"
+                  stroke-dashoffset="427.26"
+                />
+              </svg>
+
+              <!-- Center Text inside Circle -->
+              <div class="meter-center">
+                <span id="meter-percent-value" class="meter-percent">0.00%</span>
+                <span class="meter-subtext">Current Rate</span>
+              </div>
+            </div>
+
+            <!-- Status Banner -->
+            <div id="status-banner" class="status-banner">
+              <div class="status-icon-wrap" id="status-icon" aria-hidden="true"></div>
+              <div class="status-text-wrap">
+                <h3 id="status-title" class="status-title">Status</h3>
+                <p id="status-subtitle" class="status-subtitle">Evaluation message</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Linear Target Comparison Bar -->
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-labels">
+              <span>0%</span>
+              <span class="target-flag">75% Target Threshold</span>
+              <span>100%</span>
+            </div>
+            <div class="linear-track">
+              <div id="linear-fill" class="linear-fill" style="width: 0%;"></div>
+              <div class="threshold-marker" title="75% Minimum Required" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <!-- Key Metrics Grid Cards -->
+          <div class="metrics-grid">
+            <!-- Metric 1: Total Classes -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Total Conducted</span>
+                <span class="metric-icon" aria-hidden="true">📚</span>
+              </div>
+              <div id="stat-total" class="metric-value">0</div>
+              <div class="metric-footer">Attended + Absent</div>
+            </div>
+
+            <!-- Metric 2: Classes Attended -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Classes Attended</span>
+                <span class="metric-icon" aria-hidden="true">✅</span>
+              </div>
+              <div id="stat-attended" class="metric-value text-success">0</div>
+              <div id="stat-attended-ratio" class="metric-footer">0 / 0 periods</div>
+            </div>
+
+            <!-- Metric 3: Classes Absent -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-label">Classes Absent</span>
+                <span class="metric-icon" aria-hidden="true">❌</span>
+              </div>
+              <div id="stat-absent" class="metric-value text-danger">0</div>
+              <div id="stat-absent-ratio" class="metric-footer">0 missed</div>
+            </div>
+
+            <!-- Metric 4: Key Action Metric (Safe absences OR classes needed) -->
+            <div id="action-metric-card" class="metric-card highlight-card">
+              <div class="metric-header">
+                <span id="action-metric-label" class="metric-label">Recommendation</span>
+                <span id="action-metric-icon" class="metric-icon" aria-hidden="true">🎯</span>
+              </div>
+              <div id="stat-action-value" class="metric-value">0</div>
+              <div id="action-metric-footer" class="metric-footer">Formula output</div>
+            </div>
+          </div>
+
+          <!-- Dynamic Advice Box -->
+          <div id="advice-box" class="advice-box">
+            <div class="advice-content">
+              <h4 id="advice-heading">Action Plan</h4>
+              <p id="advice-message">Detailed action steps based on your 75% attendance criterion.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Guidance & Disclaimer -->
+    <footer class="app-footer">
+      <div class="disclaimer-card">
+        <div class="disclaimer-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Institutional Policy & Calculation Disclaimer</span>
+        </div>
+        <p>
+          This calculator assumes that every future period has equal mathematical weight and that attendance is strictly calculated as
+          <code>(Attended / Total) &times; 100</code>. Specific university rules, practical/lab criteria, condonation fees, duty leaves (OD),
+          and medical certificates may impact your eligibility differently. Always verify official portal records.
+        </p>
+      </div>
+
+      <div class="copyright-bar">
+        <p>&copy; AttendWise – Student Attendance Calculator. Built with HTML5, CSS3 & Vanilla JavaScript.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
